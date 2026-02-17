@@ -1,0 +1,602 @@
+/* =============================================================
+   SIMON'S LITTLE CORNER — Stylesheet
+   Pacific Northwest forest aesthetic — nighttime edition.
+   Cozy, contemplative, like writing by lamplight at midnight.
+
+   Main design tokens are in the :root block below.
+   ============================================================= */
+
+/* --- Design tokens (colours, fonts, spacing) --- */
+:root {
+  --bg:           #1a1c1a;       /* deep charcoal, near-black */
+  --bg-deep:      #141614;       /* darker still, for depth */
+  --island-bg:    rgba(38, 42, 38, 0.88); /* warm charcoal card */
+  --text:         #e4dfd6;       /* warm cream, easy on the eyes */
+  --text-muted:   #8a857b;       /* soft muted for labels */
+  --accent:       #7ba576;       /* muted forest green */
+  --accent-light: #9dbf95;       /* lighter green for hover states */
+  --wood:         #a08b72;       /* weathered wood brown, warm */
+  --border:       rgba(255, 255, 255, 0.08); /* very subtle dividers */
+
+  --font-body:    'Lora', Georgia, serif;
+  --font-ui:      'Inter', system-ui, sans-serif;
+
+  --max-width:    600px;
+  --spacing-unit: 1.5rem;
+}
+
+/* --- Reset & base --- */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 17px;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  font-family: var(--font-body);
+  color: var(--text);
+  line-height: 1.75;
+  min-height: 100vh;
+
+  /* Default background for non-homepage pages (diary, etc.) */
+  background-color: var(--bg);
+}
+
+/* =============================================================
+   HOMEPAGE BACKGROUND — Dark watercolor wash
+   Soft organic shapes in deep forest green, dark slate blue,
+   and muted charcoal. Atmospheric, subtle, no literal forms.
+   Built from overlapping radial gradients with irregular sizing.
+   ============================================================= */
+body.homepage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  background-color: #151815;
+  background-image:
+
+    /* --- Large soft wash: deep forest green, upper left --- */
+    radial-gradient(
+      ellipse 80% 60% at 15% 20%,
+      rgba(45, 72, 50, 0.35) 0%,
+      rgba(45, 72, 50, 0.12) 40%,
+      transparent 70%
+    ),
+
+    /* --- Broad slate-blue wash, center right --- */
+    radial-gradient(
+      ellipse 70% 80% at 80% 35%,
+      rgba(42, 55, 68, 0.30) 0%,
+      rgba(42, 55, 68, 0.10) 45%,
+      transparent 75%
+    ),
+
+    /* --- Deep green bloom, bottom center --- */
+    radial-gradient(
+      ellipse 90% 50% at 50% 90%,
+      rgba(35, 60, 40, 0.40) 0%,
+      rgba(35, 60, 40, 0.15) 35%,
+      transparent 65%
+    ),
+
+    /* --- Dark teal wisp, upper right --- */
+    radial-gradient(
+      ellipse 50% 45% at 70% 10%,
+      rgba(38, 62, 60, 0.25) 0%,
+      rgba(38, 62, 60, 0.08) 50%,
+      transparent 80%
+    ),
+
+    /* --- Muted charcoal bloom, left edge --- */
+    radial-gradient(
+      ellipse 40% 70% at 5% 60%,
+      rgba(50, 50, 48, 0.35) 0%,
+      rgba(50, 50, 48, 0.10) 50%,
+      transparent 80%
+    ),
+
+    /* --- Warm dark green, bottom right — like moss in shadow --- */
+    radial-gradient(
+      ellipse 60% 55% at 85% 80%,
+      rgba(40, 65, 42, 0.30) 0%,
+      rgba(40, 65, 42, 0.10) 40%,
+      transparent 70%
+    ),
+
+    /* --- Faint blue-grey haze, top center --- */
+    radial-gradient(
+      ellipse 100% 35% at 45% 5%,
+      rgba(48, 56, 62, 0.20) 0%,
+      rgba(48, 56, 62, 0.06) 50%,
+      transparent 80%
+    ),
+
+    /* --- Small warm accent, bottom left — like distant lamplight --- */
+    radial-gradient(
+      ellipse 30% 25% at 25% 85%,
+      rgba(70, 65, 48, 0.18) 0%,
+      rgba(70, 65, 48, 0.05) 50%,
+      transparent 80%
+    );
+
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+  padding: 2rem 0;
+}
+
+/* =============================================================
+   ISLAND — The floating content card, centered vertically
+   and horizontally on the page.
+   ============================================================= */
+.island {
+  background: var(--island-bg);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  box-shadow:
+    0 2px 8px rgba(0, 0, 0, 0.15),
+    0 12px 40px rgba(0, 0, 0, 0.25);
+  margin-top: auto;
+  margin-bottom: 0;
+}
+
+/* --- Page layout --- */
+.page-wrap {
+  max-width: var(--max-width);
+  margin-left: auto;
+  margin-right: auto;
+  padding: 3rem 2.5rem 2.5rem;
+
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+}
+
+/* --- Header / site title --- */
+header {
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.site-title {
+  font-family: var(--font-body);
+  font-size: 1.15rem;
+  font-weight: 400;
+  color: var(--text-muted);
+  letter-spacing: 0.02em;
+}
+
+/* Used in diary pages to make the title a home link */
+.site-title-link {
+  color: inherit;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.site-title-link:hover {
+  color: var(--accent);
+}
+
+/* --- Section labels --- */
+.section-label {
+  font-family: var(--font-ui);
+  font-size: 0.7rem;
+  font-weight: 300;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 0.4rem;
+}
+
+/* --- Currently section --- */
+.currently-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.currently-item {
+  display: grid;
+  grid-template-columns: 120px 1fr;
+  gap: 0.5rem;
+  align-items: baseline;
+}
+
+.currently-item dt {
+  font-family: var(--font-ui);
+  font-size: 0.78rem;
+  font-weight: 300;
+  color: var(--text-muted);
+  letter-spacing: 0.04em;
+  padding-top: 0.15em;
+}
+
+.currently-item dd {
+  font-family: var(--font-body);
+  font-size: 1rem;
+  color: var(--text);
+}
+
+/* --- Listen section (SoundCloud player below about) --- */
+.listen-section {
+  border-top: 1px solid var(--border);
+  padding-top: 1.5rem;
+}
+
+.listen-label {
+  font-family: var(--font-ui);
+  font-size: 0.72rem;
+  font-weight: 300;
+  letter-spacing: 0.06em;
+  color: var(--text-muted);
+  margin-bottom: 0.75rem;
+}
+
+.sc-player {
+  width: 100%;
+}
+
+.sc-player iframe {
+  width: 100%;
+  height: 80px;
+  border: none;
+  border-radius: 3px;
+  opacity: 0.8;
+}
+
+/* --- About section --- */
+.about {
+  margin-top: 1rem; /* Extra separation from the currently section above */
+  padding-bottom: 0.75rem; /* Extra breathing room before the listen section border below */
+}
+
+.about p {
+  font-size: 1rem;
+  color: var(--text);
+  max-width: 480px;
+}
+
+/* --- Card footer (diary link + meta info) --- */
+.card-footer {
+  border-top: 1px solid var(--border);
+  padding-top: 1.25rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.diary-link {
+  font-family: var(--font-ui);
+  font-size: 0.78rem;
+  font-weight: 300;
+  color: var(--text-muted);
+  text-decoration: none;
+  letter-spacing: 0.02em;
+  transition: color 0.2s ease;
+}
+
+.diary-link:hover {
+  color: var(--accent);
+}
+
+/* --- Site meta: visitor count + last updated --- */
+.site-meta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.15rem;
+}
+
+.visitor-count,
+.last-updated {
+  font-family: var(--font-ui);
+  font-size: 0.62rem;
+  font-weight: 300;
+  color: rgba(138, 133, 123, 0.55);
+  letter-spacing: 0.04em;
+}
+
+/* --- Page footer (outside the card — year + heart) --- */
+.page-footer {
+  text-align: center;
+  padding: 1rem 0;
+  margin-top: 0;
+  margin-bottom: auto;
+  border: none;
+  width: 100%;
+}
+
+.page-footer span {
+  font-family: var(--font-ui);
+  font-size: 0.65rem;
+  font-weight: 300;
+  color: rgba(138, 133, 123, 0.35);
+  letter-spacing: 0.06em;
+}
+
+.page-footer .heart {
+  font-size: 0.85rem;
+  vertical-align: -0.05em;
+}
+
+/* ================================================================
+   DIARY — shared styles for both the list and entry pages.
+   These classes are used in diary/index.html and diary/entry.html
+   ================================================================ */
+
+/* Password screen */
+.password-screen {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 60vh;
+  gap: 1.2rem;
+}
+
+.password-screen p {
+  font-family: var(--font-ui);
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  font-weight: 300;
+}
+
+.password-screen .pw-error {
+  color: var(--wood);
+  font-size: 0.78rem;
+  min-height: 1.2em;
+}
+
+.password-form {
+  display: flex;
+  gap: 0.6rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.password-form input[type="password"] {
+  font-family: var(--font-ui);
+  font-size: 0.9rem;
+  font-weight: 300;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid var(--border);
+  color: var(--text);
+  padding: 0.3rem 0;
+  width: 180px;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+.password-form input[type="password"]:focus {
+  border-bottom-color: var(--accent);
+}
+
+.password-form input[type="password"]::placeholder {
+  color: rgba(138, 133, 123, 0.4);
+}
+
+.password-form button {
+  font-family: var(--font-ui);
+  font-size: 0.78rem;
+  font-weight: 300;
+  letter-spacing: 0.06em;
+  background: none;
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  padding: 0.3rem 0.8rem;
+  cursor: pointer;
+  border-radius: 2px;
+  transition: border-color 0.2s ease, color 0.2s ease;
+}
+
+.password-form button:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+/* Diary entries list */
+.diary-content {
+  display: none;
+}
+
+.diary-content.unlocked {
+  display: block;
+}
+
+.entries-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.entry-item {
+  border-bottom: 1px solid var(--border);
+}
+
+.entry-item:first-child {
+  border-top: 1px solid var(--border);
+}
+
+.entry-link {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1rem;
+  padding: 0.85rem 0;
+  text-decoration: none;
+  color: var(--text);
+  transition: color 0.15s ease;
+}
+
+.entry-link:hover {
+  color: var(--accent);
+}
+
+.entry-title {
+  font-family: var(--font-body);
+  font-size: 1rem;
+  font-weight: 400;
+}
+
+.entry-date {
+  font-family: var(--font-ui);
+  font-size: 0.72rem;
+  font-weight: 300;
+  color: var(--text-muted);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+/* Individual diary entry */
+.entry-body {
+  font-family: var(--font-body);
+  font-size: 1rem;
+  line-height: 1.85;
+  color: var(--text);
+  max-width: 520px;
+}
+
+.entry-body h1,
+.entry-body h2,
+.entry-body h3 {
+  font-family: var(--font-body);
+  font-weight: 600;
+  margin-top: 2rem;
+  margin-bottom: 0.6rem;
+  line-height: 1.3;
+}
+
+.entry-body h1 { font-size: 1.25rem; }
+.entry-body h2 { font-size: 1.1rem; }
+.entry-body h3 { font-size: 1rem; font-style: italic; font-weight: 400; }
+
+.entry-body p {
+  margin-bottom: 1.25rem;
+}
+
+.entry-body p:last-child {
+  margin-bottom: 0;
+}
+
+.entry-body em {
+  font-style: italic;
+}
+
+.entry-body strong {
+  font-weight: 600;
+}
+
+.entry-body blockquote {
+  border-left: 2px solid var(--border);
+  margin-left: 0;
+  padding-left: 1.2rem;
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+.entry-body a {
+  color: var(--accent);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.entry-body a:hover {
+  color: var(--accent-light);
+}
+
+.entry-body hr {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 2rem 0;
+}
+
+/* Back link */
+.back-link {
+  font-family: var(--font-ui);
+  font-size: 0.78rem;
+  font-weight: 300;
+  color: var(--text-muted);
+  text-decoration: none;
+  letter-spacing: 0.02em;
+  display: inline-block;
+  margin-bottom: 2.5rem;
+  transition: color 0.2s ease;
+}
+
+.back-link:hover {
+  color: var(--accent);
+}
+
+/* Entry header (title + date shown above entry body) */
+.entry-header {
+  margin-bottom: 2.5rem;
+}
+
+.entry-header .entry-date {
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.entry-header h1 {
+  font-family: var(--font-body);
+  font-size: 1.3rem;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+/* Loading / error states */
+.state-msg {
+  font-family: var(--font-ui);
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  font-weight: 300;
+}
+
+/* =============================================================
+   RESPONSIVE
+   ============================================================= */
+@media (max-width: 600px) {
+  html { font-size: 16px; }
+
+  .page-wrap {
+    padding: 2.2rem 1.4rem 2rem;
+    gap: 2.25rem;
+  }
+
+  .island {
+    margin: auto 0.75rem 0;
+    border-radius: 6px;
+  }
+
+  .currently-item {
+    grid-template-columns: 1fr;
+    gap: 0.15rem;
+  }
+
+  .currently-item dt {
+    font-size: 0.7rem;
+  }
+
+  .card-footer {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .site-meta {
+    align-items: flex-start;
+  }
+
+  .password-form input[type="password"] {
+    width: 150px;
+  }
+}

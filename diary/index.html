@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>diary — simon's little corner</title>
+  <link rel="stylesheet" href="../style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+<div class="page-wrap">
+
+  <!-- ============================================================
+       DIARY CONFIG
+       ============================================================
+
+       PASSWORD HASH
+       To change the password:
+         1. Go to https://emn178.github.io/online-tools/sha256.html
+            (or any SHA-256 tool you trust)
+         2. Type your new password and copy the hash it produces
+         3. Paste it into the DIARY_PASSWORD_HASH value below
+
+       The current password is: forest
+       ============================================================ -->
+  <script>
+    const DIARY_PASSWORD_HASH = "619a2ccf126ce837dc7cd3bdb4d7f44280a0ea4f721e5a738f859aa19d52a78f";
+
+    // ============================================================
+    // ENTRIES FOLDER
+    // This is the path (relative to diary/index.html) where your
+    // .md files live. You shouldn't need to change this.
+    // ============================================================
+    const ENTRIES_FOLDER = "entries/";
+
+    // ============================================================
+    // ENTRIES LIST
+    // Add a new entry here each time you drop a .md file into
+    // the entries/ folder. Format: { file, title, date }
+    //   file:  the filename without path (e.g. "2024-11-rain.md")
+    //   title: the title shown in the list
+    //   date:  displayed date string (e.g. "November 14, 2024")
+    // Entries are shown newest-first — put the newest at the top.
+    // ============================================================
+    const ENTRIES = [
+      {
+        file:  "2024-11-14-trail.md",
+        title: "the trail after rain",
+        date:  "November 14, 2024"
+      },
+      {
+        file:  "2024-10-31-october.md",
+        title: "last day of october",
+        date:  "October 31, 2024"
+      }
+    ];
+  </script>
+
+  <header>
+    <h1 class="site-title"><a href="../" class="site-title-link">simon's little corner</a></h1>
+  </header>
+
+  <main>
+
+    <!-- Password screen — shown by default, hidden after unlock -->
+    <div class="password-screen" id="pw-screen">
+      <h2 class="section-label">diary</h2>
+      <p>ask simon for the super secret password :p</p>
+      <form class="password-form" id="pw-form" autocomplete="off">
+        <input
+          type="password"
+          id="pw-input"
+          placeholder="password"
+          aria-label="diary password"
+          autofocus
+        />
+        <button type="submit">enter</button>
+      </form>
+      <span class="pw-error" id="pw-error" aria-live="polite"></span>
+    </div>
+
+    <!-- Diary content — hidden until correct password is entered -->
+    <div class="diary-content" id="diary-content">
+      <h2 class="section-label">diary</h2>
+      <ul class="entries-list" id="entries-list">
+        <!-- Entry links are built by the script below -->
+      </ul>
+    </div>
+
+  </main>
+
+  <footer>
+    <a href="../" class="diary-link">← back</a>
+  </footer>
+
+</div>
+
+<script>
+  // ============================================================
+  // PASSWORD CHECK
+  // Uses the Web Crypto API (built into all modern browsers)
+  // to hash what the user types and compare it to the hash above.
+  // The plaintext password is never stored anywhere.
+  // ============================================================
+  async function hashPassword(password) {
+    const encoder = new TextEncoder();
+    const data = encoder.encode(password);
+    const hashBuffer = await crypto.subtle.digest("SHA-256", data);
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    return hashArray.map(b => b.toString(16).padStart(2, "0")).join("");
+  }
+
+  function unlockDiary() {
+    // Build the entries list
+    const list = document.getElementById("entries-list");
+    list.innerHTML = "";
+
+    if (ENTRIES.length === 0) {
+      list.innerHTML = '<li class="state-msg">nothing yet.</li>';
+    } else {
+      ENTRIES.forEach(entry => {
+        const li = document.createElement("li");
+        li.className = "entry-item";
+
+        // Link passes filename via query string to entry.html
+        const href = `entry.html?entry=${encodeURIComponent(entry.file)}`;
+
+        li.innerHTML = `
+          <a class="entry-link" href="${href}">
+            <span class="entry-title">${entry.title}</span>
+            <span class="entry-date">${entry.date}</span>
+          </a>
+        `;
+        list.appendChild(li);
+      });
+    }
+
+    // Show diary, hide password screen
+    document.getElementById("pw-screen").style.display = "none";
+    document.getElementById("diary-content").classList.add("unlocked");
+
+    // Remember the session so they don't have to re-enter on refresh
+    // (sessionStorage clears when the tab is closed — a light, reasonable choice)
+    sessionStorage.setItem("diary-unlocked", "true");
+  }
+
+  // Check if already unlocked this session
+  if (sessionStorage.getItem("diary-unlocked") === "true") {
+    unlockDiary();
+  }
+
+  // Handle form submission
+  document.getElementById("pw-form").addEventListener("submit", async function(e) {
+    e.preventDefault();
+    const input = document.getElementById("pw-input").value;
+    const hash = await hashPassword(input);
+
+    if (hash === DIARY_PASSWORD_HASH) {
+      document.getElementById("pw-error").textContent = "";
+      unlockDiary();
+    } else {
+      document.getElementById("pw-error").textContent = "that's not it.";
+      document.getElementById("pw-input").value = "";
+      document.getElementById("pw-input").focus();
+    }
+  });
+</script>
+
+</body>
+</html>

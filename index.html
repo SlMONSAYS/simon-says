@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>simon's little corner</title>
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400&display=swap" rel="stylesheet" />
+</head>
+<body class="homepage">
+
+<div class="page-wrap island">
+
+  <header>
+    <h1 class="site-title">simon's little corner</h1>
+  </header>
+
+  <main>
+
+    <!-- ============================================================
+         CURRENTLY SECTION
+         Edit the values below to update what's shown on the homepage.
+         ============================================================ -->
+    <section class="currently" id="currently">
+      <dl class="currently-list">
+
+        <!-- The book you're reading right now -->
+        <div class="currently-item">
+          <dt>reading</dt>
+          <dd id="currently-reading">The Life of God in the Soul of Man — Henry Scougal</dd>
+        </div>
+
+        <!-- What you're listening to -->
+        <div class="currently-item">
+          <dt>listening to</dt>
+          <dd id="currently-listening">Wild Blue — John Mayer</dd>
+        </div>
+
+        <!-- Something you're turning over in your mind -->
+        <div class="currently-item">
+          <dt>thinking about</dt>
+          <dd id="currently-thinking">how much of a hopeless sinner i am</dd>
+        </div>
+
+        <!-- A song you keep coming back to -->
+        <div class="currently-item">
+          <dt>singing lately</dt>
+          <dd id="currently-singing">Only A Holy God — CityAlight</dd>
+        </div>
+
+      </dl>
+    </section>
+
+    <!-- ============================================================
+         ABOUT BLURB
+         Edit the paragraph below to change your about text.
+         Keep it short — 2–3 sentences feels right.
+         ============================================================ -->
+    <section class="about" id="about">
+      <h2 class="section-label">about</h2>
+      <p id="about-text">
+        I live in the Pacific Northwest and spend a lot of time thinking about
+        forests, music, and what it means to pay attention. This is a small
+        place on the internet that's just mine.
+      </p>
+    </section>
+
+    <!-- ============================================================
+         SOUNDCLOUD EMBED — "here's a song i like"
+         To update: go to your SoundCloud upload → Share → Embed,
+         copy the iframe src URL, and paste it into the src="" below.
+         Only change the src value — leave everything else alone.
+         ============================================================ -->
+    <section class="listen-section" id="listen">
+      <p class="listen-label">here's a song i really like</p>
+      <div class="sc-player">
+        <iframe
+          id="sc-iframe"
+          scrolling="no"
+          frameborder="no"
+          allow="autoplay"
+          src="https://w.soundcloud.com/player/?url=https%3A//soundcloud.com/tommisch/colourblind-feat-loyle-carner&color=%237ba576&auto_play=false&hide_related=true&show_comments=false&show_user=false&show_reposts=false&show_teaser=false"
+        ></iframe>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- A quiet link to the diary — understated, easy to miss if you're not looking -->
+  <footer class="card-footer">
+    <a href="diary/" class="diary-link">more here if u know how to look :)</a>
+
+    <!-- ============================================================
+         SITE META — visitor counter + last updated timestamp.
+         The counter uses localStorage (no tracking, no analytics).
+         Change the LAST_UPDATED date whenever you update the site.
+         ============================================================ -->
+    <div class="site-meta">
+      <span class="visitor-count" id="visitor-count"></span>
+      <!-- Change this date whenever you update the site content -->
+      <span class="last-updated" id="last-updated"></span>
+    </div>
+  </footer>
+
+</div>
+
+<!-- Page footer outside the card — year + heart -->
+<footer class="page-footer">
+  <span id="page-footer-year"></span>
+</footer>
+
+<script>
+  // ============================================================
+  // CONFIG — Last updated date
+  // Change this whenever you update the site.
+  // ============================================================
+  const LAST_UPDATED = "February 17, 2026";
+
+  // --- Visitor counter (unique IPs via ipify, stored in localStorage) ---
+  // Fetches the visitor's IP address from a free API, then checks if
+  // that IP has been seen before. Only counts genuinely new visitors.
+  // Falls back gracefully if the API is unreachable.
+  (async function() {
+    const el = document.getElementById("visitor-count");
+    const seenIPs = JSON.parse(localStorage.getItem("seen_ips") || "[]");
+    const count = parseInt(localStorage.getItem("unique_visits") || "0", 10);
+
+    try {
+      const res = await fetch("https://api.ipify.org?format=json");
+      const data = await res.json();
+      const ip = data.ip;
+
+      if (!seenIPs.includes(ip)) {
+        seenIPs.push(ip);
+        localStorage.setItem("seen_ips", JSON.stringify(seenIPs));
+        localStorage.setItem("unique_visits", (count + 1).toString());
+        el.textContent = "number of ppl who've visited this: " + (count + 1);
+      } else {
+        el.textContent = "number of ppl who've visited this: " + count;
+      }
+    } catch (e) {
+      // API unreachable — show what we have, don't increment
+      el.textContent = "number of ppl who've visited this: " + count;
+    }
+  })();
+
+  // --- Last updated ---
+  document.getElementById("last-updated").textContent = "site last updated " + LAST_UPDATED;
+
+  // --- Footer year ---
+  document.getElementById("page-footer-year").innerHTML =
+    new Date().getFullYear() + " <span class='heart'>&hearts;</span>";
+</script>
+
+</body>
+</html>
