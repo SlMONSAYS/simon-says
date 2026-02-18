@@ -5,11 +5,44 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>simon's little corner</title>
   <link rel="stylesheet" href="style.css" />
-  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;500&family=Lora:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.6/Sortable.min.js"></script>
 </head>
 <body class="homepage">
 
+<!-- SVG filter for torn/deckled paper edges — referenced by CSS -->
+<svg style="position:absolute;width:0;height:0" aria-hidden="true">
+  <defs>
+    <filter id="rough-paper">
+      <feTurbulence type="turbulence" baseFrequency="0.008" numOctaves="1" seed="2" result="noise" />
+      <feDisplacementMap in="SourceGraphic" in2="noise" scale="1" xChannelSelector="R" yChannelSelector="G" />
+    </filter>
+  </defs>
+</svg>
+
 <div class="page-wrap island">
+
+  <!-- Botanical illustration — small fern frond, top-left corner -->
+  <svg class="botanical" viewBox="0 0 80 100" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <!-- Main stem -->
+    <path d="M40 95 C38 75, 36 55, 38 10" stroke="currentColor" stroke-width="1" stroke-linecap="round" />
+    <!-- Left leaflets (bottom to top, getting smaller) -->
+    <path d="M38 80 C30 76, 22 72, 16 75" stroke="currentColor" stroke-width="0.8" stroke-linecap="round" />
+    <path d="M37 70 C29 65, 20 60, 14 62" stroke="currentColor" stroke-width="0.8" stroke-linecap="round" />
+    <path d="M37 60 C30 55, 23 50, 18 51" stroke="currentColor" stroke-width="0.7" stroke-linecap="round" />
+    <path d="M37 50 C31 46, 25 42, 21 43" stroke="currentColor" stroke-width="0.7" stroke-linecap="round" />
+    <path d="M38 40 C33 37, 28 34, 25 35" stroke="currentColor" stroke-width="0.6" stroke-linecap="round" />
+    <path d="M38 32 C34 29, 30 27, 28 28" stroke="currentColor" stroke-width="0.5" stroke-linecap="round" />
+    <path d="M38 24 C35 22, 33 20, 31 21" stroke="currentColor" stroke-width="0.4" stroke-linecap="round" />
+    <!-- Right leaflets (bottom to top, getting smaller) -->
+    <path d="M39 80 C47 76, 55 73, 60 76" stroke="currentColor" stroke-width="0.8" stroke-linecap="round" />
+    <path d="M38 70 C46 66, 54 62, 59 64" stroke="currentColor" stroke-width="0.8" stroke-linecap="round" />
+    <path d="M38 60 C45 56, 52 52, 56 53" stroke="currentColor" stroke-width="0.7" stroke-linecap="round" />
+    <path d="M38 50 C44 47, 50 44, 53 45" stroke="currentColor" stroke-width="0.7" stroke-linecap="round" />
+    <path d="M38 40 C43 38, 48 35, 50 36" stroke="currentColor" stroke-width="0.6" stroke-linecap="round" />
+    <path d="M38 32 C42 30, 46 28, 48 29" stroke="currentColor" stroke-width="0.5" stroke-linecap="round" />
+    <path d="M38 24 C41 23, 43 21, 45 22" stroke="currentColor" stroke-width="0.4" stroke-linecap="round" />
+  </svg>
 
   <header>
     <h1 class="site-title">simon's little corner</h1>
@@ -39,7 +72,7 @@
         <!-- Something you're turning over in your mind -->
         <div class="currently-item">
           <dt>thinking about</dt>
-          <dd id="currently-thinking">how much of a hopeless sinner i am</dd>
+          <dd id="currently-thinking">My next meal...</dd>
         </div>
 
         <!-- A song you keep coming back to -->
@@ -59,14 +92,12 @@
     <section class="about" id="about">
       <h2 class="section-label">about</h2>
       <p id="about-text">
-        I live in the Pacific Northwest and spend a lot of time thinking about
-        forests, music, and what it means to pay attention. This is a small
-        place on the internet that's just mine.
+        Hi! My name is Simon.. I live in the PNW and I love listening and playing to music, the outdoors, reading, and my Lord and Saviour Jesus Christ. I'm just a sinner saved by grace..
       </p>
     </section>
 
     <!-- ============================================================
-         SOUNDCLOUD EMBED — "here's a song i like"
+         SOUNDCLOUD EMBED — "here's a song i really like"
          To update: go to your SoundCloud upload → Share → Embed,
          copy the iframe src URL, and paste it into the src="" below.
          Only change the src value — leave everything else alone.
@@ -88,7 +119,7 @@
 
   <!-- A quiet link to the diary — understated, easy to miss if you're not looking -->
   <footer class="card-footer">
-    <a href="diary/" class="diary-link">more here if u know how to look :)</a>
+    <a href="diary/" class="diary-link">more here :)</a>
 
     <!-- ============================================================
          SITE META — visitor counter + last updated timestamp.
@@ -102,7 +133,133 @@
     </div>
   </footer>
 
+  <!-- Vintage postmark stamp — bottom-right corner of the card -->
+  <div class="postmark" aria-hidden="true"></div>
+
 </div>
+
+<!-- Photo gallery — appears below the card when scrolling -->
+<section class="gallery-section" id="gallery">
+  <div class="gallery-header">
+    <h2 class="gallery-title">some of my favourite photos....</h2>
+    <button class="gallery-edit-btn" id="gallery-edit-btn">edit</button>
+  </div>
+
+  <!-- Password prompt for edit mode -->
+  <div class="gallery-pw-overlay" id="gallery-pw-overlay" style="display:none">
+    <form class="gallery-pw-form" id="gallery-pw-form" autocomplete="off">
+      <input type="password" id="gallery-pw-input" placeholder="password" />
+      <button type="submit">enter</button>
+      <span class="pw-error" id="gallery-pw-error"></span>
+    </form>
+  </div>
+
+  <!-- Edit mode toolbar -->
+  <div class="gallery-toolbar" id="gallery-toolbar" style="display:none">
+    <button class="gallery-add-btn" id="gallery-add-btn">+ upload photos</button>
+    <button class="gallery-delete-selected-btn" id="gallery-delete-selected-btn" style="display:none">delete selected</button>
+    <button class="gallery-done-btn" id="gallery-done-btn">done</button>
+  </div>
+
+  <!-- Upload drop zone (shown when "+ upload photos" is clicked) -->
+  <div class="gallery-upload-zone" id="gallery-upload-zone" style="display:none">
+    <div class="upload-zone-inner" id="upload-zone-inner">
+      <p class="upload-zone-text">drag & drop photos here</p>
+      <p class="upload-zone-or">or</p>
+      <button class="upload-zone-browse" id="upload-zone-browse">choose files</button>
+      <input type="file" id="upload-file-input" accept="image/*" multiple hidden />
+    </div>
+    <div class="upload-progress-list" id="upload-progress-list"></div>
+    <button class="upload-zone-cancel" id="upload-zone-cancel">cancel</button>
+  </div>
+
+  <div class="gallery-grid" id="gallery-grid">
+    <!-- Photos injected by JS from config / localStorage -->
+  </div>
+</section>
+
+<!-- Lightbox overlay for fullscreen photo viewing -->
+<div class="lightbox" id="lightbox" aria-hidden="true">
+  <button class="lightbox-close" id="lightbox-close" aria-label="Close">&times;</button>
+  <img class="lightbox-img" id="lightbox-img" src="" alt="" />
+</div>
+
+<!-- Background PNW illustrations — scattered behind the card -->
+<!-- Small mountain ridge silhouette, top-right -->
+<svg class="bg-decor bg-mountain" viewBox="0 0 160 60" fill="none" aria-hidden="true">
+  <path d="M0 60 L25 22 L40 38 L55 12 L75 35 L90 8 L110 30 L130 15 L145 28 L160 60 Z" fill="currentColor" />
+</svg>
+
+<!-- Cedar branch, bottom-left -->
+<svg class="bg-decor bg-cedar" viewBox="0 0 80 120" fill="none" aria-hidden="true">
+  <path d="M40 5 C40 40, 38 80, 40 115" stroke="currentColor" stroke-width="1" stroke-linecap="round" />
+  <path d="M40 25 C32 20, 18 22, 12 18" stroke="currentColor" stroke-width="0.7" stroke-linecap="round" />
+  <path d="M40 25 C48 20, 60 22, 66 19" stroke="currentColor" stroke-width="0.7" stroke-linecap="round" />
+  <path d="M40 40 C30 35, 15 37, 8 33" stroke="currentColor" stroke-width="0.7" stroke-linecap="round" />
+  <path d="M40 40 C50 36, 62 38, 70 34" stroke="currentColor" stroke-width="0.7" stroke-linecap="round" />
+  <path d="M40 55 C32 51, 20 52, 14 48" stroke="currentColor" stroke-width="0.7" stroke-linecap="round" />
+  <path d="M40 55 C48 51, 58 53, 64 49" stroke="currentColor" stroke-width="0.7" stroke-linecap="round" />
+  <path d="M40 70 C34 67, 25 68, 20 64" stroke="currentColor" stroke-width="0.6" stroke-linecap="round" />
+  <path d="M40 70 C46 67, 54 68, 58 65" stroke="currentColor" stroke-width="0.6" stroke-linecap="round" />
+  <path d="M40 85 C36 82, 30 83, 26 80" stroke="currentColor" stroke-width="0.5" stroke-linecap="round" />
+  <path d="M40 85 C44 82, 50 83, 53 80" stroke="currentColor" stroke-width="0.5" stroke-linecap="round" />
+</svg>
+
+<!-- Raindrops cluster, top-left -->
+<svg class="bg-decor bg-rain" viewBox="0 0 60 90" fill="none" aria-hidden="true">
+  <line x1="15" y1="0" x2="12" y2="18" stroke="currentColor" stroke-width="0.8" stroke-linecap="round" />
+  <line x1="30" y1="8" x2="27" y2="30" stroke="currentColor" stroke-width="0.8" stroke-linecap="round" />
+  <line x1="45" y1="3" x2="42" y2="22" stroke="currentColor" stroke-width="0.8" stroke-linecap="round" />
+  <line x1="10" y1="35" x2="7" y2="52" stroke="currentColor" stroke-width="0.7" stroke-linecap="round" />
+  <line x1="35" y1="42" x2="32" y2="58" stroke="currentColor" stroke-width="0.7" stroke-linecap="round" />
+  <line x1="50" y1="38" x2="48" y2="50" stroke="currentColor" stroke-width="0.6" stroke-linecap="round" />
+  <line x1="22" y1="62" x2="20" y2="76" stroke="currentColor" stroke-width="0.7" stroke-linecap="round" />
+  <line x1="42" y1="68" x2="40" y2="82" stroke="currentColor" stroke-width="0.6" stroke-linecap="round" />
+</svg>
+
+<!-- Small pinecone, bottom-right -->
+<svg class="bg-decor bg-pinecone" viewBox="0 0 40 60" fill="none" aria-hidden="true">
+  <path d="M20 5 L20 10" stroke="currentColor" stroke-width="0.8" stroke-linecap="round" />
+  <path d="M20 10 C14 14, 10 20, 12 24 C14 22, 18 18, 20 16 C22 18, 26 22, 28 24 C30 20, 26 14, 20 10Z" fill="currentColor" opacity="0.6" />
+  <path d="M20 20 C13 25, 8 32, 10 37 C13 34, 17 28, 20 26 C23 28, 27 34, 30 37 C32 32, 27 25, 20 20Z" fill="currentColor" opacity="0.5" />
+  <path d="M20 32 C14 37, 10 44, 13 48 C15 45, 18 40, 20 38 C22 40, 25 45, 27 48 C30 44, 26 37, 20 32Z" fill="currentColor" opacity="0.4" />
+  <path d="M20 43 C16 47, 14 52, 16 55 C17 53, 19 49, 20 48 C21 49, 23 53, 24 55 C26 52, 24 47, 20 43Z" fill="currentColor" opacity="0.35" />
+</svg>
+
+<!-- Small fern fronds, upper-mid left -->
+<svg class="bg-decor bg-fern-left" viewBox="0 0 50 70" fill="none" aria-hidden="true">
+  <path d="M25 65 C24 50, 23 35, 25 8" stroke="currentColor" stroke-width="0.8" stroke-linecap="round" />
+  <path d="M24 55 C19 52, 14 50, 10 52" stroke="currentColor" stroke-width="0.6" stroke-linecap="round" />
+  <path d="M24 45 C18 42, 12 40, 8 41" stroke="currentColor" stroke-width="0.6" stroke-linecap="round" />
+  <path d="M24 35 C20 33, 15 32, 12 33" stroke="currentColor" stroke-width="0.5" stroke-linecap="round" />
+  <path d="M25 25 C22 23, 18 22, 16 23" stroke="currentColor" stroke-width="0.4" stroke-linecap="round" />
+  <path d="M26 55 C31 53, 36 51, 39 53" stroke="currentColor" stroke-width="0.6" stroke-linecap="round" />
+  <path d="M26 45 C32 43, 37 41, 40 42" stroke="currentColor" stroke-width="0.6" stroke-linecap="round" />
+  <path d="M25 35 C30 33, 35 32, 37 33" stroke="currentColor" stroke-width="0.5" stroke-linecap="round" />
+</svg>
+
+<!-- Rolling hills silhouette, mid left -->
+<svg class="bg-decor bg-ridge-left" viewBox="0 0 120 45" fill="none" aria-hidden="true">
+  <path d="M0 45 L15 28 L30 35 L50 18 L65 30 L80 14 L95 25 L110 20 L120 45 Z" fill="currentColor" />
+</svg>
+
+<!-- Mist wisps, lower-mid left -->
+<svg class="bg-decor bg-mist" viewBox="0 0 60 40" fill="none" aria-hidden="true">
+  <path d="M5 20 C15 16, 25 18, 35 15 C42 13, 50 16, 55 14" stroke="currentColor" stroke-width="0.6" stroke-linecap="round" opacity="0.7" />
+  <path d="M10 28 C18 25, 28 27, 38 24 C45 22, 52 25, 58 23" stroke="currentColor" stroke-width="0.5" stroke-linecap="round" opacity="0.5" />
+  <path d="M2 35 C12 32, 20 34, 30 31" stroke="currentColor" stroke-width="0.4" stroke-linecap="round" opacity="0.4" />
+</svg>
+
+<!-- Moss cluster, upper-mid right -->
+<svg class="bg-decor bg-moss" viewBox="0 0 40 45" fill="none" aria-hidden="true">
+  <circle cx="12" cy="30" r="3" fill="currentColor" opacity="0.4" />
+  <circle cx="20" cy="25" r="4" fill="currentColor" opacity="0.35" />
+  <circle cx="28" cy="32" r="3.5" fill="currentColor" opacity="0.3" />
+  <circle cx="16" cy="20" r="2.5" fill="currentColor" opacity="0.35" />
+  <circle cx="25" cy="18" r="2" fill="currentColor" opacity="0.3" />
+  <path d="M15 28 C14 22, 16 15, 18 10" stroke="currentColor" stroke-width="0.5" stroke-linecap="round" opacity="0.5" />
+  <path d="M22 26 C23 20, 22 14, 24 8" stroke="currentColor" stroke-width="0.5" stroke-linecap="round" opacity="0.5" />
+</svg>
 
 <!-- Page footer outside the card — year + heart -->
 <footer class="page-footer">
@@ -115,6 +272,9 @@
   // Change this whenever you update the site.
   // ============================================================
   const LAST_UPDATED = "February 17, 2026";
+
+  // --- Lock the diary whenever someone lands on the homepage ---
+  sessionStorage.removeItem("diary-unlocked");
 
   // --- Visitor counter (unique IPs via ipify, stored in localStorage) ---
   // Fetches the visitor's IP address from a free API, then checks if
@@ -134,13 +294,13 @@
         seenIPs.push(ip);
         localStorage.setItem("seen_ips", JSON.stringify(seenIPs));
         localStorage.setItem("unique_visits", (count + 1).toString());
-        el.textContent = "number of ppl who've visited this: " + (count + 1);
+        el.textContent = "no. of ppl who've visited: " + (count + 1);
       } else {
-        el.textContent = "number of ppl who've visited this: " + count;
+        el.textContent = "no. of ppl who've visited: " + count;
       }
     } catch (e) {
       // API unreachable — show what we have, don't increment
-      el.textContent = "number of ppl who've visited this: " + count;
+      el.textContent = "no. of ppl who've visited: " + count;
     }
   })();
 
@@ -150,6 +310,487 @@
   // --- Footer year ---
   document.getElementById("page-footer-year").innerHTML =
     new Date().getFullYear() + " <span class='heart'>&hearts;</span>";
+</script>
+
+<script>
+  // ============================================================
+  // PHOTO GALLERY — CLOUDINARY SETUP INSTRUCTIONS
+  // ============================================================
+  //
+  // This gallery uses Cloudinary to host uploaded photos.
+  // Follow these steps to set it up:
+  //
+  // 1. Go to https://cloudinary.com and sign up for a free account
+  //    (the free tier gives you 25GB storage + 25GB bandwidth/month)
+  //
+  // 2. After signing in, go to your Dashboard. You'll see your
+  //    "Cloud Name" near the top — it looks like "dxxxxxx".
+  //    Copy it and paste it into CLOUDINARY_CLOUD_NAME below.
+  //
+  // 3. Create an unsigned upload preset:
+  //    a. Go to Settings → Upload (left sidebar)
+  //    b. Scroll down to "Upload presets" and click "Add upload preset"
+  //    c. Set "Signing Mode" to "Unsigned"
+  //    d. (Optional) Set a folder name like "gallery" to keep things tidy
+  //    e. Click Save
+  //    f. Copy the preset name (e.g. "ml_default" or your custom name)
+  //       and paste it into CLOUDINARY_UPLOAD_PRESET below.
+  //
+  // 4. That's it! Uploads will go directly from the browser to
+  //    your Cloudinary account. No server needed.
+  //
+  // NOTE: Deleting a photo from the gallery only removes it from
+  // this site's localStorage. The image file stays in your
+  // Cloudinary account. To fully delete files, log into your
+  // Cloudinary Media Library and remove them there.
+  // ============================================================
+
+  // *** PASTE YOUR CLOUDINARY CREDENTIALS HERE ***
+  const CLOUDINARY_CLOUD_NAME = "dvy4h5f9u";  // e.g. "dxxxxxx"
+  const CLOUDINARY_UPLOAD_PRESET = "SIXSEVEN";  // e.g. "ml_default"
+
+  // Default photos array — used on first load before localStorage exists.
+  // Each photo: { src: "url", alt: "description", public_id: "cloudinary_id" }
+  const GALLERY_PHOTOS = [];
+
+  // Same password hash as the diary
+  const GALLERY_PASSWORD_HASH = "e9c6d1605c7561e417c92bac47b6b0afa951d18cee96a40bb7186998abcbf4ea";
+
+  (function () {
+    // --- DOM refs ---
+    var grid = document.getElementById("gallery-grid");
+    var section = document.getElementById("gallery");
+    var lightbox = document.getElementById("lightbox");
+    var lightboxImg = document.getElementById("lightbox-img");
+    var lightboxClose = document.getElementById("lightbox-close");
+    var editBtn = document.getElementById("gallery-edit-btn");
+    var toolbar = document.getElementById("gallery-toolbar");
+    var addBtn = document.getElementById("gallery-add-btn");
+    var deleteSelectedBtn = document.getElementById("gallery-delete-selected-btn");
+    var doneBtn = document.getElementById("gallery-done-btn");
+    var uploadZone = document.getElementById("gallery-upload-zone");
+    var uploadZoneInner = document.getElementById("upload-zone-inner");
+    var uploadBrowse = document.getElementById("upload-zone-browse");
+    var uploadFileInput = document.getElementById("upload-file-input");
+    var uploadProgressList = document.getElementById("upload-progress-list");
+    var uploadCancel = document.getElementById("upload-zone-cancel");
+    var pwOverlay = document.getElementById("gallery-pw-overlay");
+    var pwForm = document.getElementById("gallery-pw-form");
+    var pwInput = document.getElementById("gallery-pw-input");
+    var pwError = document.getElementById("gallery-pw-error");
+
+    // --- State ---
+    var photos = loadPhotos();
+    var editing = false;
+    var selectedIndices = new Set();
+    var uploading = false;
+    var sortableInstance = null;
+
+    // --- Load photos from localStorage or fall back to config ---
+    function loadPhotos() {
+      var saved = localStorage.getItem("gallery_photos");
+      if (saved) {
+        try { return JSON.parse(saved); } catch (e) { /* fall through */ }
+      }
+      return GALLERY_PHOTOS.slice();
+    }
+
+    // --- SHA-256 hash (same as diary) ---
+    async function hashPassword(password) {
+      var encoder = new TextEncoder();
+      var data = encoder.encode(password);
+      var hashBuffer = await crypto.subtle.digest("SHA-256", data);
+      var hashArray = Array.from(new Uint8Array(hashBuffer));
+      return hashArray.map(function (b) { return b.toString(16).padStart(2, "0"); }).join("");
+    }
+
+    // --- Update "delete selected" button visibility ---
+    function updateDeleteBtn() {
+      if (selectedIndices.size > 0) {
+        deleteSelectedBtn.style.display = "";
+        deleteSelectedBtn.textContent = "delete selected (" + selectedIndices.size + ")";
+      } else {
+        deleteSelectedBtn.style.display = "none";
+      }
+    }
+
+    // --- Render gallery ---
+    function renderGallery() {
+      grid.innerHTML = "";
+
+      if (editing) {
+        grid.classList.add("editing");
+      } else {
+        grid.classList.remove("editing");
+      }
+
+      photos.forEach(function (photo, i) {
+        var item = document.createElement("div");
+        item.className = "gallery-item" + (editing ? " shake" : "");
+        item.dataset.index = i;
+
+        if (editing) {
+          // Checkbox for selection
+          var checkbox = document.createElement("input");
+          checkbox.type = "checkbox";
+          checkbox.className = "gallery-select-cb";
+          checkbox.checked = selectedIndices.has(i);
+          checkbox.addEventListener("change", function (e) {
+            e.stopPropagation();
+            var idx = parseInt(item.dataset.index);
+            if (checkbox.checked) {
+              selectedIndices.add(idx);
+              item.classList.add("selected");
+            } else {
+              selectedIndices.delete(idx);
+              item.classList.remove("selected");
+            }
+            updateDeleteBtn();
+          });
+          checkbox.addEventListener("click", function (e) { e.stopPropagation(); });
+          checkbox.addEventListener("mousedown", function (e) { e.stopPropagation(); });
+          checkbox.addEventListener("touchstart", function (e) { e.stopPropagation(); });
+          item.appendChild(checkbox);
+
+          if (selectedIndices.has(i)) {
+            item.classList.add("selected");
+          }
+        }
+
+        var img = document.createElement("img");
+        img.src = photo.src;
+        img.alt = photo.alt || "";
+        img.loading = "lazy";
+        img.className = "gallery-img";
+
+        if (!editing) {
+          img.addEventListener("click", function () {
+            openLightbox(photo.src, photo.alt);
+          });
+        }
+
+        item.appendChild(img);
+        grid.appendChild(item);
+      });
+
+      // Fade-in observer (only in view mode)
+      if (!editing) {
+        var observer = new IntersectionObserver(
+          function (entries) {
+            entries.forEach(function (entry) {
+              if (entry.isIntersecting) {
+                entry.target.classList.add("visible");
+                observer.unobserve(entry.target);
+              }
+            });
+          },
+          { threshold: 0.15, rootMargin: "0px 0px -40px 0px" }
+        );
+        grid.querySelectorAll(".gallery-item").forEach(function (item) {
+          observer.observe(item);
+        });
+      }
+    }
+
+    // --- Initialize SortableJS on the grid for edit mode ---
+    function initSortable() {
+      if (sortableInstance) sortableInstance.destroy();
+      sortableInstance = new Sortable(grid, {
+        animation: 200,
+        easing: "cubic-bezier(0.2, 0, 0.2, 1)",
+        ghostClass: "sortable-ghost",
+        chosenClass: "sortable-chosen",
+        dragClass: "sortable-drag",
+        filter: ".gallery-select-cb",
+        preventOnFilter: false,
+        delay: 0,
+        delayOnTouchOnly: true,
+        touchStartThreshold: 5,
+        onEnd: function (evt) {
+          if (evt.oldIndex !== evt.newIndex) {
+            var moved = photos.splice(evt.oldIndex, 1)[0];
+            photos.splice(evt.newIndex, 0, moved);
+            // Update data-index attributes
+            grid.querySelectorAll(".gallery-item").forEach(function (el, i) {
+              el.dataset.index = i;
+            });
+            // Clear selection since indices shifted
+            selectedIndices.clear();
+            updateDeleteBtn();
+            grid.querySelectorAll(".gallery-item.selected").forEach(function (el) {
+              el.classList.remove("selected");
+            });
+            grid.querySelectorAll(".gallery-select-cb").forEach(function (cb) {
+              cb.checked = false;
+            });
+          }
+        }
+      });
+    }
+
+    function destroySortable() {
+      if (sortableInstance) {
+        sortableInstance.destroy();
+        sortableInstance = null;
+      }
+    }
+
+    // --- Lightbox ---
+    function openLightbox(src, alt) {
+      lightboxImg.src = src;
+      lightboxImg.alt = alt || "";
+      lightbox.classList.add("active");
+      lightbox.setAttribute("aria-hidden", "false");
+      document.body.style.overflow = "hidden";
+    }
+
+    function closeLightbox() {
+      lightbox.classList.remove("active");
+      lightbox.setAttribute("aria-hidden", "true");
+      document.body.style.overflow = "";
+      setTimeout(function () { lightboxImg.src = ""; }, 300);
+    }
+
+    lightboxClose.addEventListener("click", closeLightbox);
+    lightbox.addEventListener("click", function (e) {
+      if (e.target === lightbox) closeLightbox();
+    });
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape" && lightbox.classList.contains("active")) {
+        closeLightbox();
+      }
+    });
+
+    // --- Edit mode: enter / exit ---
+    function enterEditMode() {
+      editing = true;
+      selectedIndices.clear();
+      editBtn.style.display = "none";
+      toolbar.style.display = "";
+      updateDeleteBtn();
+      renderGallery();
+      initSortable();
+    }
+
+    function exitEditMode() {
+      destroySortable();
+      editing = false;
+      selectedIndices.clear();
+      editBtn.style.display = "";
+      toolbar.style.display = "none";
+      uploadZone.style.display = "none";
+      renderGallery();
+    }
+
+    // --- Password gate ---
+    editBtn.addEventListener("click", function () {
+      pwOverlay.style.display = "";
+      pwInput.value = "";
+      pwError.textContent = "";
+      pwInput.focus();
+    });
+
+    pwForm.addEventListener("submit", async function (e) {
+      e.preventDefault();
+      var hash = await hashPassword(pwInput.value);
+      if (hash === GALLERY_PASSWORD_HASH) {
+        pwOverlay.style.display = "none";
+        enterEditMode();
+      } else {
+        pwError.textContent = "that's not it.";
+        pwInput.value = "";
+        pwInput.focus();
+      }
+    });
+
+    pwOverlay.addEventListener("click", function (e) {
+      if (e.target === pwOverlay) {
+        pwOverlay.style.display = "none";
+      }
+    });
+
+    // --- Done / Save ---
+    function saveAndExit() {
+      localStorage.setItem("gallery_photos", JSON.stringify(photos));
+      exitEditMode();
+    }
+
+    doneBtn.addEventListener("click", saveAndExit);
+
+    // --- Click blank space to exit edit mode ---
+    section.addEventListener("click", function (e) {
+      if (!editing) return;
+      var target = e.target;
+      if (target.closest(".gallery-item") ||
+          target.closest(".gallery-toolbar") ||
+          target.closest(".gallery-upload-zone") ||
+          target.closest(".gallery-pw-overlay") ||
+          target.closest(".gallery-header") ||
+          target.closest("button") ||
+          target.closest("input")) return;
+      saveAndExit();
+    });
+
+    // --- Cloudinary upload ---
+    function uploadToCloudinary(file) {
+      return new Promise(function (resolve, reject) {
+        if (!CLOUDINARY_CLOUD_NAME || !CLOUDINARY_UPLOAD_PRESET) {
+          reject(new Error("Cloudinary not configured. Set CLOUDINARY_CLOUD_NAME and CLOUDINARY_UPLOAD_PRESET in the script."));
+          return;
+        }
+
+        var formData = new FormData();
+        formData.append("file", file);
+        formData.append("upload_preset", CLOUDINARY_UPLOAD_PRESET);
+
+        var xhr = new XMLHttpRequest();
+        xhr.open("POST", "https://api.cloudinary.com/v1_1/" + CLOUDINARY_CLOUD_NAME + "/image/upload");
+
+        var progressItem = document.createElement("div");
+        progressItem.className = "upload-progress-item";
+        progressItem.innerHTML =
+          '<span class="upload-filename">' + escapeHtml(file.name) + '</span>' +
+          '<div class="upload-progress-bar"><div class="upload-progress-fill"></div></div>' +
+          '<span class="upload-status">uploading...</span>';
+        uploadProgressList.appendChild(progressItem);
+
+        var fill = progressItem.querySelector(".upload-progress-fill");
+        var statusEl = progressItem.querySelector(".upload-status");
+
+        xhr.upload.addEventListener("progress", function (e) {
+          if (e.lengthComputable) {
+            var pct = Math.round((e.loaded / e.total) * 100);
+            fill.style.width = pct + "%";
+            statusEl.textContent = pct + "%";
+          }
+        });
+
+        xhr.addEventListener("load", function () {
+          if (xhr.status >= 200 && xhr.status < 300) {
+            var data = JSON.parse(xhr.responseText);
+            fill.style.width = "100%";
+            statusEl.textContent = "done";
+            progressItem.classList.add("complete");
+            setTimeout(function () {
+              if (progressItem.parentNode) progressItem.parentNode.removeChild(progressItem);
+            }, 1200);
+            resolve({
+              src: data.secure_url,
+              alt: "",
+              public_id: data.public_id
+            });
+          } else {
+            statusEl.textContent = "failed";
+            progressItem.classList.add("error");
+            reject(new Error("Upload failed: " + xhr.status));
+          }
+        });
+
+        xhr.addEventListener("error", function () {
+          statusEl.textContent = "failed";
+          progressItem.classList.add("error");
+          reject(new Error("Upload failed — network error"));
+        });
+
+        xhr.send(formData);
+      });
+    }
+
+    function escapeHtml(str) {
+      var div = document.createElement("div");
+      div.textContent = str;
+      return div.innerHTML;
+    }
+
+    async function handleFiles(files) {
+      if (!files || files.length === 0) return;
+
+      if (!CLOUDINARY_CLOUD_NAME || !CLOUDINARY_UPLOAD_PRESET) {
+        alert("Cloudinary is not configured yet.\n\nOpen index.html and fill in CLOUDINARY_CLOUD_NAME and CLOUDINARY_UPLOAD_PRESET.\n\nSee the setup instructions in the code comments.");
+        return;
+      }
+
+      uploading = true;
+      uploadProgressList.innerHTML = "";
+
+      var fileArray = Array.from(files);
+
+      for (var i = 0; i < fileArray.length; i++) {
+        try {
+          var result = await uploadToCloudinary(fileArray[i]);
+          photos.push(result);
+          destroySortable();
+          renderGallery();
+          initSortable();
+        } catch (err) {
+          console.error("Upload error:", err.message);
+        }
+      }
+
+      uploading = false;
+      uploadFileInput.value = "";
+    }
+
+    // "Upload photos" button opens the upload zone
+    addBtn.addEventListener("click", function () {
+      uploadZone.style.display = "";
+      uploadProgressList.innerHTML = "";
+    });
+
+    uploadCancel.addEventListener("click", function () {
+      uploadZone.style.display = "none";
+    });
+
+    // "Choose files" button triggers file input
+    uploadBrowse.addEventListener("click", function () {
+      uploadFileInput.click();
+    });
+
+    uploadFileInput.addEventListener("change", function () {
+      handleFiles(this.files);
+    });
+
+    // Drag & drop onto upload zone
+    uploadZoneInner.addEventListener("dragover", function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      uploadZoneInner.classList.add("drag-active");
+    });
+
+    uploadZoneInner.addEventListener("dragleave", function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      uploadZoneInner.classList.remove("drag-active");
+    });
+
+    uploadZoneInner.addEventListener("drop", function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      uploadZoneInner.classList.remove("drag-active");
+      var files = e.dataTransfer.files;
+      var imageFiles = Array.from(files).filter(function (f) {
+        return f.type.startsWith("image/");
+      });
+      handleFiles(imageFiles);
+    });
+
+    // --- Delete selected photos ---
+    deleteSelectedBtn.addEventListener("click", function () {
+      if (selectedIndices.size === 0) return;
+      var indices = Array.from(selectedIndices).sort(function (a, b) { return b - a; });
+      indices.forEach(function (idx) {
+        photos.splice(idx, 1);
+      });
+      selectedIndices.clear();
+      updateDeleteBtn();
+      destroySortable();
+      renderGallery();
+      initSortable();
+    });
+
+    // --- Initial render ---
+    renderGallery();
+  })();
 </script>
 
 </body>
