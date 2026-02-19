@@ -133,9 +133,10 @@
       // Update the browser tab title
       document.title = `${title} — simon's little corner`;
 
-      // Remove the frontmatter-style date line before rendering,
-      // so it doesn't appear in the body text
+      // Strip the title heading and date line before rendering
+      // so they don't appear twice (they're shown in entry-header above)
       const bodyMarkdown = markdown
+        .replace(/^#\s+.+\n?/m, "")
         .replace(/^date:\s*.+\n?/im, "")
         .trim();
 
